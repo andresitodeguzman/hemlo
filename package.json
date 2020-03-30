@@ -1,0 +1,25 @@
+{
+  "name": "hemlo",
+  "version": "1.0.0",
+  "description": "Mini library for web apps",
+  "main": "src/hemlo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andresitodeguzman/hemlo.git"
+  },
+  "author": "Andresito de Guzman",
+  "license": "Apache-2.0",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/andresitodeguzman/hemlo/issues"
+  },
+  "homepage": "https://github.com/andresitodeguzman/hemlo#readme"
+}
