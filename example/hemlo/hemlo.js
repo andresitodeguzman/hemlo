@@ -18,14 +18,37 @@ export const init = () => {
     style.appendChild(document.createTextNode('hemlo-router { display: block; } hemlo-view { display: block; }'));
     document.head.appendChild(style);
 
+    app.init();
     router.init();
 
     window.addEventListener('hashchange', () => {
         router.handle();
     });
 
+    window.hemlo = { app };
 
 };
+
+export const app = {
+    theme: {
+        color: null
+    },
+    init() {
+        this.setThemeColor(this.theme.color || 'grey');
+    },
+    setThemeColor(color) {
+        if(app.theme.color !== color) app.theme.color = color;
+        let dtm = document.head.querySelector(`meta[name='theme-color']`);
+        if (dtm !== null) {
+            dtm.setAttribute('content', color || 'black');
+        } else {
+            let tc = document.createElement('meta');
+            tc.name = 'theme-color';
+            tc.content = color || '';
+            document.head.appendChild(tc);
+        }
+    }
+}
 
 export const router = {
     routes:  [],
@@ -37,7 +60,7 @@ export const router = {
                 if(spec){
                     
                     if(spec['controller'] !== false || undefined || null) {
-                        window[r['view']] = spec['controller'] || {};
+                        window[r['view'].replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); })] = spec['controller'] || {};
                     } else {
                         console.warn(`Router: [Error] '${r.view}' does not have a controller defined`);
                     }
