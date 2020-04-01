@@ -1,4 +1,4 @@
-<style scoped>
+<style>
     .container {
         margin-left: 5%;
         margin-right: 5%;
@@ -10,4 +10,10 @@
     <h1>Home</h1>
     <p>Welcome home</p>
     <a href="#!/">Home</a> | <a href="#!/about-us">About us</a>
+    <br><br>
+    <p>
+        What is your name?<br>
+        <input type="text" name="first_name" onkeyup="home.inputKeyup(event)"><br>
+        <button onclick="home.greetMe();">Greet Me!</button>
+    </p>
 </div>

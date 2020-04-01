@@ -1,11 +1,11 @@
 import * as hemlo from './hemlo/hemlo.js';
 
-import * as homeObject from './component/home/index.js';
-import * as notFoundObject from './component/not-found/index.js';
-import * as aboutUsObject from './component/about-us/index.js';
+import * as homeObject from './views/home/index.js';
+import * as notFoundObject from './views/not-found/index.js';
+import * as aboutUsObject from './views/about-us/index.js';
 
 const theme = {
-    color: 'steelblue'
+    color: '#4682b4'
 };
 
 const routes = [
@@ -14,6 +14,7 @@ const routes = [
     { path: '/404', view: '**', spec: notFoundObject } // not found
 ];
 
+hemlo.app.name = "My Application";
 hemlo.app.theme = theme;
 hemlo.router.routes = routes;
 hemlo.init();

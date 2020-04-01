@@ -3,34 +3,15 @@
     <head>
         <title>Sample</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            :root {
-                font-family: Arial, Helvetica, sans-serif;
-            }
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            nav {
-                width: 100%;
-                background-color: steelblue;
-                position: fixed;
-                top: 0;
-                min-height: 65px;
-                color:white;
-                padding-left: 5%;
-                padding-right: 5%;
-                -webkit-box-shadow: 0px 7px 10px 3px rgba(181,181,181,1);
-                -moz-box-shadow: 0px 7px 10px 3px rgba(181,181,181,1);
-                box-shadow: 0px 7px 10px 3px rgba(181,181,181,1);
-            }
-        </style>
+        <style>body { display: none }</style>
     </head>
     <body>
-        <nav>
-            <h3 style="padding-top: 5px;">My App</h3>
-        </nav>
-        <hemlo-router></hemlo-router>
+        <hemlo-app>
+            <hemlo-bar>
+                <h3 style="padding-top: 5px;">My App</h3>
+            </hemlo-bar>
+            <hemlo-router></hemlo-router>
+        </hemlo-app>
     </body>
 </html>
 <script type="module" src="./app.js"></script>
