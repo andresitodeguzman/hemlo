@@ -4,6 +4,7 @@
   "description": "Mini library for web apps",
   "main": "src/hemlo.js",
   "scripts": {
+    "serve": "http-server ./example",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/andresitodeguzman/hemlo/issues"
   },
-  "homepage": "https://github.com/andresitodeguzman/hemlo#readme"
+  "homepage": "https://github.com/andresitodeguzman/hemlo#readme",
+  "dependencies": {
+    "http-server": "^0.12.1"
+  }
 }
