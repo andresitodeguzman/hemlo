@@ -9,7 +9,7 @@ Create a javascript file which will serve as the entrypoint of the application. 
 import * as hemlo from './hemlo/hemlo.js';
 
 // Create an object to specify theme
-const theme = { color: 'steelblue' };
+const theme = { color: '#4682b4' };
 
 // Specify the name of the application
 const appName = "My Application";
@@ -52,7 +52,7 @@ Finally create an index.html file with the following contents.
 ## Views and Routing
 To create views, you must create a spec file where the meta-data of the views are contained. For example we'll create the not-found page.
 
-First, create a `views` folder and inside create a `not-found` folder. Once done, create an `index.js` and `not-found.view.html` files inside the folder.
+First, create a `views` folder and inside create a `not-found` folder. Once done, create an `index.js` and `notfound.view.html` files inside the folder.
 
 The index.js should contain the following:
 
