@@ -1,3 +1,4 @@
+import { parseCSS } from './css-parser.js';
 class HemloApp extends HTMLElement { constructor() { super(); } }
 class HemloRouter extends HTMLElement { constructor() { super(); } }
 class HemloView extends HTMLElement { constructor() { super(); } }
@@ -151,6 +152,48 @@ export const router = {
     routes: [],
 
     init() {
+
+        const elementDriller = (className, parent) => {
+            return parent.childNodes.forEach(child => {
+                if(child instanceof HTMLElement) {
+                    if(child.tagName !== 'STYLE') {
+                        child.classList.add(className);
+                        elementDriller(className, child);    
+                    }
+                }
+            });
+        };
+
+        const eventAppend = (className, element) => {
+            if(element instanceof HTMLElement) {
+                Object.keys(element.attributes).forEach(key => {
+                    const attrb = element.attributes[key].nodeName;
+                    if(attrb.substr(0,2) == 'on') {
+                        let list = (element.attributes[key].nodeValue.replace('; ', ';')).split(';');
+                        var ks = ["postMessage(","blur(","focus(","close(","frames(","self(","window(","parent(","opener(","top(","length(","closed(","location(","document(","origin(","name(","history(","locationbar(","menubar(","personalbar(","scrollbars(","statusbar(","toolbar(","status(","frameElement(","navigator(","customElements(","external(","screen(","innerWidth(","innerHeight(","scrollX(","pageXOffset(","scrollY(","pageYOffset(","screenX(","screenY(","outerWidth(","outerHeight(","devicePixelRatio(","clientInformation(","screenLeft(","screenTop(","defaultStatus(","defaultstatus(","styleMedia(","onanimationend(","onanimationiteration(","onanimationstart(","onsearch(","ontransitionend(","onwebkitanimationend(","onwebkitanimationiteration(","onwebkitanimationstart(","onwebkittransitionend(","isSecureContext(","onabort(","onblur(","oncancel(","oncanplay(","oncanplaythrough(","onchange(","onclick(","onclose(","oncontextmenu(","oncuechange(","ondblclick(","ondrag(","ondragend(","ondragenter(","ondragleave(","ondragover(","ondragstart(","ondrop(","ondurationchange(","onemptied(","onended(","onerror(","onfocus(","oninput(","oninvalid(","onkeydown(","onkeypress(","onkeyup(","onload(","onloadeddata(","onloadedmetadata(","onloadstart(","onmousedown(","onmouseenter(","onmouseleave(","onmousemove(","onmouseout(","onmouseover(","onmouseup(","onmousewheel(","onpause(","onplay(","onplaying(","onprogress(","onratechange(","onreset(","onresize(","onscroll(","onseeked(","onseeking(","onselect(","onstalled(","onsubmit(","onsuspend(","ontimeupdate(","ontoggle(","onvolumechange(","onwaiting(","onwheel(","onauxclick(","ongotpointercapture(","onlostpointercapture(","onpointerdown(","onpointermove(","onpointerup(","onpointercancel(","onpointerover(","onpointerout(","onpointerenter(","onpointerleave(","onafterprint(","onbeforeprint(","onbeforeunload(","onhashchange(","onlanguagechange(","onmessage(","onmessageerror(","onoffline(","ononline(","onpagehide(","onpageshow(","onpopstate(","onrejectionhandled(","onstorage(","onunhandledrejection(","onunload(","performance(","stop(","open(","alert(","confirm(","prompt(","print(","requestAnimationFrame(","cancelAnimationFrame(","requestIdleCallback(","cancelIdleCallback(","captureEvents(","releaseEvents(","getComputedStyle(","matchMedia(","moveTo(","moveBy(","resizeTo(","resizeBy(","getSelection(","find(","webkitRequestAnimationFrame(","webkitCancelAnimationFrame(","fetch(","btoa(","atob(","setTimeout(","clearTimeout(","setInterval(","clearInterval(","createImageBitmap(","scroll(","scrollTo(","scrollBy(","onappinstalled(","onbeforeinstallprompt(","crypto(","ondevicemotion(","ondeviceorientation(","ondeviceorientationabsolute(","indexedDB(","webkitStorageInfo(","sessionStorage(","localStorage(","chrome(","visualViewport(","speechSynthesis(","webkitRequestFileSystem(","webkitResolveLocalFileSystemURL(","addEventListener(", "removeEventListener(", "openDatabase(", "dispatchEvent("]
+                        list = list.map(i => {
+                            if(i !== '') {
+                                const w = i.split('.');
+                                if(ks.indexOf(w[0]) == -1) {
+                                    return i = `${className}.${i}`;
+                                }
+                            }                            
+                        });
+                        element.setAttribute(attrb, list.join('; '));
+                    }
+                });
+            }
+        };
+
+        const driller = (className, func, parent) => {
+            if(parent instanceof HTMLElement) {
+                parent.childNodes.forEach(child => {
+                    func(className, child);
+                    driller(className, func, child);
+                });
+            }
+        };
+
         if (document.querySelector('hemlo-router')) {
             this.routes.forEach(r => {
                 let spec = r.spec;
@@ -160,6 +203,28 @@ export const router = {
                                 let e = document.createElement('hemlo-view');
                                 e.setAttribute('view', r.view);
                                 e.innerHTML = ob;
+                                const style = e.querySelector('style');
+                                if(style) {
+                                    if(style.getAttribute('scoped') !== null) {
+                                        const styleRaw = parseCSS(style.innerHTML);
+                                        style.remove();
+                                        const newStyle = document.createElement('style');
+                                        styleRaw.forEach(o => {
+                                            const ruleArray = [];
+                                            o.rules.forEach(r => ruleArray.push(`${r.key}: ${r.value}`));
+                                            if(o.selector[0] == '.' || o.selector[0] == '#') {
+                                                newStyle.innerHTML += `.${r.view}${o.selector} { ${ruleArray.join('; ')} }`;                                        
+                                            } else {
+                                                newStyle.innerHTML += `${o.selector} { ${ruleArray.join('; ')} }`;
+                                            }
+                                        });
+                                        e.prepend(newStyle);    
+                                    }
+                                }
+                                if(r.view !== '**') {
+                                    elementDriller(r.view, e);
+                                    driller(r.view, eventAppend, e);
+                                }
                                 document.querySelector(`hemlo-router`).appendChild(e);
                             })
                             .then(() => {

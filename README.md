@@ -117,7 +117,7 @@ Now we'll set-up a basic home view. For that we'll repeat the creation of the fo
 In the `home.view.html` let's try to add the following:
 
 ```html
-<style>
+<style scoped>
     .home.container {
         margin-left: 5%;
         margin-right: 5%;
@@ -129,7 +129,7 @@ In the `home.view.html` let's try to add the following:
     <p>
         What is your name?<br>
         <input type="text" name="first_name"><br>
-        <button onclick="home.greetMe();">Greet Me!</button>
+        <button onclick="greetMe();">Greet Me!</button>
     </p>
 </div>
 ```
@@ -170,9 +170,11 @@ const routes = [
 
 ```
 
+As for styling, you can add a `scoped` attribute to the `style` tag when you want to have the style applied only to the view.
+
 As you can see we have imported `hemlo-utils.js` in our `index.js` script. Hemlo utils contains the basic view manipulation methods we can use to make our app interactive. In this example we used `form.get()` to get the data from the text input.
 
-Also, in the html file we were able to access the methods of our controller by using the 'view' name we have declared on our router. In this case it's `home`. But in complicated cases, like a two-word view, we need to use a dash to separate them, for example:
+We can access the methods of our controller globally by using the 'view' name we have declared on our router. In this case it's `home`. But in complicated cases, like a two-word view, we need to use a dash to separate them, for example:
 
 ```javascript
 { path: "/about-me", view: "about-me", spec: aboutMeComponent }
@@ -185,13 +187,11 @@ export const controller = {
 };
 ```
 
-In order for me to access handleClick(), I will convert the `view` name into camel case, of which in this example is `aboutMe`. Here's the example in the html.
+In order for me to access handleClick() in any view, I will convert the `view` name into camel case, of which in this example is `aboutMe`. Here's the example in the html.
 
 ```html
 <button onclick="aboutMe.handleClick()">Click Me!</button>
 ```
-
-What this means is that you can also call methods from other views. As long as you follow the camel case scheme.
 
 ### Navigation
 In order to navigate through views, you can use the provided `router.navigate()` method of Hemlo utils if you're navigating through a method. Also, you can simply use the traditional href in anchor tags, ex: `<a href="#!/sample-page">Sample Page</a>`. Just always remember to add a `#!` when using href.
